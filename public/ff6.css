@@ -20,7 +20,7 @@
   --dialogue-window-color-gradient: #6d6db3,#5554ad,#5352a8,#3f4791,#354783,#32348d,#32328a,#313188,#222279,#14156d,#02045a,#040233,#020234,#020134;
   --br: 5px;
   --bg: #6b6e87,#71767e,#c2c1c5,#c9c9cb,#ccc9cc,#c8c4c0,#7c7874,#c0bcb3;
-  --f: 18px;
+  --f: 28px;
   --highlighted-text: #edd758;
 }
 
@@ -31,6 +31,7 @@ html {
   padding: 0;
   background-color: var(--background-color-black);
   text-shadow: 1px 1px #2d2a4b;
+  font-size: 28px;
 }
 
 h1, h2, h3, h4, h5 { font-weight: normal; }
