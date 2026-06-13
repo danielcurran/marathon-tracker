@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#1a1a2e">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>Marathon Tracker</title>
+  <link rel="stylesheet" href="/style.css">
+</head>
+<body>
+
+  <header class="top-bar">
+    <h1 class="app-title">🏃 Marathon Tracker</h1>
+    <button id="today-btn" class="icon-btn">Today</button>
+  </header>
+
+  <section class="week-summary" id="week-summary">
+    <div class="stat">
+      <span class="stat-value" id="stat-distance">0</span>
+      <span class="stat-label">km</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="stat-runs">0</span>
+      <span class="stat-label">runs</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="stat-cal">0</span>
+      <span class="stat-label">cal</span>
+    </div>
+    <div class="stat">
+      <span class="stat-value" id="stat-water">0</span>
+      <span class="stat-label">ml</span>
+    </div>
+  </section>
+
+  <nav class="tab-bar">
+    <button class="tab-btn active" data-tab="runs">Runs</button>
+    <button class="tab-btn" data-tab="nutrition">Nutrition</button>
+    <button class="tab-btn" data-tab="water">Water</button>
+  </nav>
+
+  <div class="panels">
+    <section class="panel active" id="panel-runs">
+      <div class="panel-header">
+        <h2>Today's Run</h2>
+        <button id="add-run-btn" class="btn btn-primary">+ Add Run</button>
+      </div>
+      <div id="runs-list"></div>
+    </section>
+
+    <section class="panel" id="panel-nutrition">
+      <div class="panel-header">
+        <h2>Today's Meals</h2>
+        <button id="add-meal-btn" class="btn btn-primary">+ Add Meal</button>
+      </div>
+      <div id="meals-list"></div>
+    </section>
+
+    <section class="panel" id="panel-water">
+      <div class="panel-header">
+        <h2>Water Intake</h2>
+        <button id="add-water-btn" class="btn btn-primary">+ Add</button>
+      </div>
+      <div id="water-list"></div>
+    </section>
+  </div>
+
+  <div id="run-modal" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <h2>Log Run</h2>
+      <div class="modal-body">
+        <input type="date" id="run-date" class="input">
+        <input type="number" id="run-distance" class="input" placeholder="Distance (km)" step="0.01" min="0">
+        <input type="number" id="run-duration" class="input" placeholder="Duration (minutes)" step="1" min="0">
+        <select id="run-type" class="input">
+          <option value="easy">Easy</option>
+          <option value="tempo">Tempo</option>
+          <option value="interval">Interval</option>
+          <option value="long_run">Long Run</option>
+          <option value="recovery">Recovery</option>
+          <option value="race">Race</option>
+        </select>
+        <input type="number" id="run-effort" class="input" placeholder="Perceived effort (1-10)" min="1" max="10">
+        <input type="text" id="run-notes" class="input" placeholder="Notes">
+      </div>
+      <div class="modal-actions">
+        <button id="run-cancel" class="btn btn-ghost">Cancel</button>
+        <button id="run-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="meal-modal" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <h2>Log Meal</h2>
+      <div class="modal-body">
+        <input type="date" id="meal-date" class="input">
+        <select id="meal-type" class="input">
+          <option value="breakfast">Breakfast</option>
+          <option value="lunch">Lunch</option>
+          <option value="dinner">Dinner</option>
+          <option value="snack">Snack</option>
+        </select>
+        <input type="text" id="meal-desc" class="input" placeholder="What did you eat?">
+        <input type="number" id="meal-cal" class="input" placeholder="Calories" step="1" min="0">
+        <input type="number" id="meal-protein" class="input" placeholder="Protein (g)" step="1" min="0">
+      </div>
+      <div class="modal-actions">
+        <button id="meal-cancel" class="btn btn-ghost">Cancel</button>
+        <button id="meal-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="water-modal" class="modal-overlay hidden">
+    <div class="modal-sheet">
+      <h2>Add Water</h2>
+      <div class="modal-body">
+        <input type="date" id="water-date" class="input">
+        <input type="number" id="water-ml" class="input" placeholder="ml (e.g. 250, 500)" step="50" min="0">
+        <div class="quick-water">
+          <button class="quick-water-btn" data-ml="250">250ml</button>
+          <button class="quick-water-btn" data-ml="500">500ml</button>
+          <button class="quick-water-btn" data-ml="750">750ml</button>
+          <button class="quick-water-btn" data-ml="1000">1L</button>
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button id="water-cancel" class="btn btn-ghost">Cancel</button>
+        <button id="water-save" class="btn btn-primary">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,1 @@
+{"name":"marathon-tracker","version":"1.0.0","description":"Marathon training tracker for runs, nutrition, and hydration.","main":"server.js","scripts":{"start":"node server.js","dev":"node --watch server.js"},"dependencies":{"express":"^4.21.0","mongoose":"^8.8.0","cors":"^2.8.5","dotenv":"^16.4.5"}}
