@@ -6,9 +6,27 @@
 
   function str(d) { return d.toISOString().split('T')[0]; }
 
-  function pad(n) { return n.toString().padStart(2, '0'); }
+  function getMonday(date) {
+    const d = new Date(date);
+    const day = d.getDay();
+    d.setDate(d.getDate() - day + (day === 0 ? -6 : 1));
+    d.setHours(0,0,0,0);
+    return d;
+  }
+
+  function getSunday(date) {
+    const m = getMonday(date);
+    m.setDate(m.getDate() + 6);
+    return m;
+  }
+
+  function formatDate(date) {
+    return date.toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric' });
+  }
 
   function todayStr() { return str(new Date()); }
+
+  function isToday(d) { return str(d) === todayStr(); }
 
   function showToast(msg, type) {
     type = type || 'info';
@@ -36,7 +54,9 @@
 
   async function loadSummary() {
     try {
-      const data = await api('/api/summary');
+      const weekStart = str(getMonday(currentDate));
+      const weekEnd = str(getSunday(currentDate));
+      const data = await api('/api/summary?start=' + weekStart + '&end=' + weekEnd);
       document.getElementById('stat-distance').textContent = data.totalDistance.toFixed(1);
       document.getElementById('stat-runs').textContent = data.runs;
       document.getElementById('stat-cal').textContent = data.calories;
@@ -47,9 +67,9 @@
   async function loadRuns() {
     const el = document.getElementById('runs-list');
     try {
-      const runs = await api('/api/runs?start=' + todayStr());
+      const runs = await api('/api/runs?start=' + str(currentDate) + '&end=' + str(currentDate));
       if (runs.length === 0) {
-        el.innerHTML = '<div class="empty-state">No runs logged today</div>';
+        el.innerHTML = '<div class="empty-state">No runs logged ' + (isToday(currentDate) ? 'today' : 'on this day') + '</div>';
         return;
       }
       el.innerHTML = runs.map(r => {
@@ -61,15 +81,15 @@
           '<div class="card-row">' + pace + (r.perceivedEffort ? '<span class="card-stat">RPE: <span>' + r.perceivedEffort + '/10</span></span>' : '') + '</div>' +
         '</div>';
       }).join('');
-    } catch (e) { el.innerHTML = '<div class="empty-state">Error loading runs</div>'; }
+    } catch (e) { console.error(e); el.innerHTML = '<div class="empty-state">Error loading runs</div>'; }
   }
 
   async function loadMeals() {
     const el = document.getElementById('meals-list');
     try {
-      const meals = await api('/api/meals?start=' + todayStr());
+      const meals = await api('/api/meals?start=' + str(currentDate) + '&end=' + str(currentDate));
       if (meals.length === 0) {
-        el.innerHTML = '<div class="empty-state">No meals logged today</div>';
+        el.innerHTML = '<div class="empty-state">No meals logged ' + (isToday(currentDate) ? 'today' : 'on this day') + '</div>';
         return;
       }
       el.innerHTML = meals.map(m =>
@@ -83,15 +103,15 @@
           '</div>' +
         '</div>'
       ).join('');
-    } catch (e) { el.innerHTML = '<div class="empty-state">Error loading meals</div>'; }
+    } catch (e) { console.error(e); el.innerHTML = '<div class="empty-state">Error loading meals</div>'; }
   }
 
   async function loadWater() {
     const el = document.getElementById('water-list');
     try {
-      const entries = await api('/api/water?start=' + todayStr());
+      const entries = await api('/api/water?start=' + str(currentDate) + '&end=' + str(currentDate));
       if (entries.length === 0) {
-        el.innerHTML = '<div class="empty-state">No water logged today</div>';
+        el.innerHTML = '<div class="empty-state">No water logged ' + (isToday(currentDate) ? 'today' : 'on this day') + '</div>';
         return;
       }
       const total = entries.reduce((s, e) => s + e.ml, 0);
@@ -103,14 +123,25 @@
         '</div>'
       ).join('') +
       '<div class="card" style="background:var(--primary-light)"><div class="card-title">Total: <span style="color:var(--primary)">' + total + ' ml</span></div></div>';
-    } catch (e) { el.innerHTML = '<div class="empty-state">Error loading water</div>'; }
+    } catch (e) { console.error(e); el.innerHTML = '<div class="empty-state">Error loading water</div>'; }
+  }
+
+  function updateDateLabel() {
+    document.getElementById('date-label').textContent = formatDate(currentDate);
   }
 
   function loadData() {
+    updateDateLabel();
     loadSummary();
     if (tab === 'runs') loadRuns();
     else if (tab === 'nutrition') loadMeals();
     else if (tab === 'water') loadWater();
+  }
+
+  function shiftDay(delta) {
+    currentDate.setDate(currentDate.getDate() + delta);
+    currentDate = new Date(currentDate);
+    loadData();
   }
 
   // Tab switching
@@ -118,12 +149,21 @@
     btn.addEventListener('click', () => switchTab(btn.dataset.tab));
   });
 
-  // Today button
+  // Day navigation
+  document.getElementById('day-prev').addEventListener('click', () => shiftDay(-1));
+  document.getElementById('day-next').addEventListener('click', () => shiftDay(1));
   document.getElementById('today-btn').addEventListener('click', () => { currentDate = new Date(); loadData(); });
+
+  // Keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    if (e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
+    if (e.key === 'ArrowLeft') shiftDay(-1);
+    else if (e.key === 'ArrowRight') shiftDay(1);
+  });
 
   // Add run
   document.getElementById('add-run-btn').addEventListener('click', () => {
-    document.getElementById('run-date').value = todayStr();
+    document.getElementById('run-date').value = str(currentDate);
     document.getElementById('run-distance').value = '';
     document.getElementById('run-duration').value = '';
     document.getElementById('run-type').value = 'easy';
@@ -156,7 +196,7 @@
 
   // Add meal
   document.getElementById('add-meal-btn').addEventListener('click', () => {
-    document.getElementById('meal-date').value = todayStr();
+    document.getElementById('meal-date').value = str(currentDate);
     document.getElementById('meal-type').value = 'breakfast';
     document.getElementById('meal-desc').value = '';
     document.getElementById('meal-cal').value = '';
@@ -187,7 +227,7 @@
 
   // Add water
   document.getElementById('add-water-btn').addEventListener('click', () => {
-    document.getElementById('water-date').value = todayStr();
+    document.getElementById('water-date').value = str(currentDate);
     document.getElementById('water-ml').value = '';
     document.getElementById('water-modal').classList.remove('hidden');
   });

@@ -1,0 +1,64 @@
+@font-face {
+  font-family: "Final Fantasy 3/6 Font Regular";
+  src: url("fonts/final_fantasy_36_font.woff") format("woff"),
+       url("fonts/final_fantasy_36_font.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+:root {
+  --outer-battle-window-color-0: #7c7874;
+  --outer-battle-window-color-1: #c8c4c0;
+  --outer-battle-window-color-2: #ccc9cc;
+  --outer-battle-window-color-3: #c9c9cb;
+  --outer-battle-window-color-4: #c2c1c5;
+  --outer-battle-window-color-5: #71767e;
+  --outer-battle-window-color-6: #6b6e87;
+  --background-color-blue: #21217c;
+  --background-color-black: #181820;
+  --battle-window-bottom-gradient-color: #040136;
+  --dialogue-window-color-gradient: #6d6db3,#5554ad,#5352a8,#3f4791,#354783,#32348d,#32328a,#313188,#222279,#14156d,#02045a,#040233,#020234,#020134;
+  --br: 5px;
+  --bg: #6b6e87,#71767e,#c2c1c5,#c9c9cb,#ccc9cc,#c8c4c0,#7c7874,#c0bcb3;
+  --f: 18px;
+  --highlighted-text: #edd758;
+}
+
+html {
+  font-family: "Final Fantasy 3/6 Font Regular", monospace;
+  color: #ecedee;
+  margin: 0;
+  padding: 0;
+  background-color: var(--background-color-black);
+  text-shadow: 1px 1px #2d2a4b;
+}
+
+h1, h2, h3, h4, h5 { font-weight: normal; }
+
+input, select, button, textarea {
+  font-family: "Final Fantasy 3/6 Font Regular", monospace;
+  text-shadow: 1px 1px #2d2a4b;
+}
+
+.outer-dialogue-window {
+  border-radius: var(--br);
+  padding: calc(var(--br) + 5px);
+  background:
+    radial-gradient(farthest-side at bottom right,var(--bg)) top left /var(--br) var(--br),
+    radial-gradient(farthest-side at top right,var(--bg)) bottom left /var(--br) var(--br),
+    radial-gradient(farthest-side at bottom left,var(--bg)) top right/var(--br) var(--br),
+    radial-gradient(farthest-side at top left,var(--bg)) bottom right/var(--br) var(--br),
+    linear-gradient(to top,var(--bg)) top /calc(100% - 2*var(--br)) var(--br),
+    linear-gradient(to bottom,var(--bg)) bottom/calc(100% - 2*var(--br)) var(--br),
+    linear-gradient(to right,var(--bg)) right /var(--br) calc(100% - 2*var(--br)),
+    linear-gradient(to left,var(--bg)) left /var(--br) calc(100% - 2*var(--br));
+  background-repeat: no-repeat;
+  box-sizing: border-box;
+  font-size: var(--f);
+  text-shadow: 2px 1px #2d2a4b;
+}
+
+.inner-dialogue-window {
+  background: linear-gradient(to bottom, var(--dialogue-window-color-gradient));
+  padding: 10px;
+}

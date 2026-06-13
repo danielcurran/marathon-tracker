@@ -7,14 +7,30 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>Marathon Tracker</title>
+  <link rel="stylesheet" href="/ff6.css">
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
 
+<div class="outer-dialogue-window">
+<div class="inner-dialogue-window">
+
   <header class="top-bar">
     <h1 class="app-title">🏃 Marathon Tracker</h1>
-    <button id="today-btn" class="icon-btn">Today</button>
+    <div class="top-actions">
+      <button id="today-btn" class="icon-btn">Today</button>
+    </div>
   </header>
+
+  <section class="date-nav">
+    <button id="day-prev" class="nav-arrow">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg>
+    </button>
+    <h2 id="date-label" class="date-label">Today</h2>
+    <button id="day-next" class="nav-arrow">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg>
+    </button>
+  </section>
 
   <section class="week-summary" id="week-summary">
     <div class="stat">
@@ -135,6 +151,9 @@
   </div>
 
   <div id="toast" class="toast hidden"></div>
+
+</div>
+</div>
 
   <script src="/app.js"></script>
 </body>
